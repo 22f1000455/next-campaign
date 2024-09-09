@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Influencer Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            background-color: #4B6584;
+            padding-top: 20px;
+            color: white;
+        }
+
+        .sidebar h4 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #2C3A47;
+            color: #fff;
+        }
+
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            background-color: #fff;
+            min-height: 100vh;
+        }
+
+        .content .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .content .navbar h2 {
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .content .navbar input {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+        }
+
+        .card-wrapper {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .card-custom {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 10px;
+            width: 300px;
+            transition: transform 0.3s;
+        }
+
+        .card-custom:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-custom h5 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .card-custom .number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #4B6584;
+        }
+
+        .card-custom .progress {
+            margin-top: 10px;
+        }
+
+        .content-section {
+            margin-top: 30px;
+        }
+
+        .content-section h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .btn-request-ad {
+            display: inline-block;
+            background-color: #4B6584;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-request-ad:hover {
+            background-color: #2C3A47;
+        }
+
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-custom th, .table-custom td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .table-custom th {
+            background-color: #4B6584;
+            color: white;
+        }
+
+        .table-custom tr:hover {
+            background-color: #f0f2f5;
+        }
+
+        .table-custom button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .table-custom .btn-edit {
+            background-color: #2C3A47;
+            color: white;
+        }
+
+        .table-custom .btn-delete {
+            background-color: #E74C3C;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h4>Welcome, {{ current_user.username }}</h4>
+        <a href="{{ url_for('influencer_dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="{{ url_for('edit_influencer', influencer_id=current_user.id) }}"><i class="fas fa-user"></i> Profile</a>
+        <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <div class="content">
+        <div class="navbar">
+            <h2>Influencer Dashboard</h2>
+            <input type="text" placeholder="Search...">
+        </div>
+
+        <div class="card-wrapper">
+            <div class="card-custom">
+                <h5>Total Campaigns</h5>
+                <div class="number">{{ total_campaigns }}</div>
+                <div class="progress">
+                    <div class="progress-bar" style="width: 50%; background-color: #4B6584;"></div>
+                </div>
+            </div>
+
+            <div class="card-custom">
+                <h5>Total Requests</h5>
+                <div class="number">{{ total_requests }}</div>
+                <div class="progress">
+                    <div class="progress-bar" style="width: 70%; background-color: #45aaf2;"></div>
+                </div>
+            </div>
+
+            <div class="card-custom">
+                <h5>Accepted Requests</h5>
+                <div class="number">{{ total_accepted_requests }}</div>
+                <div class="progress">
+                    <div class="progress-bar" style="width: 80%; background-color: #2ecc71;"></div>
+                </div>
+            </div>
+
+            <div class="card-custom">
+                <h5>Revenue</h5>
+                <div class="number">Rs {{ revenue }}</div>
+                <div class="progress">
+                    <div class="progress-bar" style="width: 60%; background-color: #f1c40f;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h3>Manage Your Requests</h3>
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>Campaign Title</th>
+                        <th>Niche</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ad_request in ad_requests %}
+                    <tr>
+                        <td>{{ ad_request.campaign.title }}</td>
+                        <td>{{ ad_request.campaign.niche }}</td>
+                        <td>{{ ad_request.campaign.start_date.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ ad_request.campaign.end_date.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ ad_request.status }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5">No requests found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-section">
+            <h3>Active Campaigns</h3>
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>Campaign Title</th>
+                        <th>Description</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for campaign in campaigns %}
+                    <tr>
+                        <td>{{ campaign.title }}</td>
+                        <td>{{ campaign.description }}</td>
+                        <td>{{ campaign.start_date }}</td>
+                        <td>{{ campaign.end_date }}</td>
+                        <td>
+                            <a href="#" class="btn-request-ad" onclick="openModal({{ campaign.id }})">Request Ad</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5">No active campaigns available.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form class="modal-form" action="/request_ad" method="POST">
+                <div class="form-group">
+                    <label for="campaign_id">Campaign ID</label>
+                    <input type="text" id="campaign_id" name="campaign_id" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="requirements">Requirements</label>
+                    <textarea id="requirements" name="requirements" class="form-control" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="payment_amount">Payment Amount</label>
+                    <input type="number" id="payment_amount" name="payment_amount" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" class="form-control" required></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Submit Request</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal(campaignId) {
+            document.getElementById("campaign_id").value = campaignId;
+            document.getElementById("myModal").style.display = "block";
+        }
+
+        // Close the modal
+        var span = document.getElementsByClassName("close")[0];
+        span.onclick = function() {
+            document.getElementById("myModal").style.display = "none";
+        }
+        
+        window.onclick = function(event) {
+            if (event.target == document.getElementById("myModal")) {
+                document.getElementById("myModal").style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Create Ad Request{% endblock %}
+{% block content %}
+<h2>Create Ad Request</h2>
+<form method="POST" action="{{ url_for('create_ad_request') }}">
+    {{ form.hidden_tag() }}
+    <div>
+        {{ form.requirements.label }}<br>
+        {{ form.requirements(rows=5) }}<br>
+        {{ form.payment_amount.label }}<br>
+        {{ form.payment_amount(size=32) }}<br>
+        {{ form.status.label }}<br>
+        {{ form.status() }}<br>
+        {{ form.submit() }}
+    </div>
+</form>
+{% endblock %}

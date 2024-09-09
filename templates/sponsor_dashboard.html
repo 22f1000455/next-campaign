@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sponsor Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            background-color: #4B6584;
+            padding-top: 20px;
+            color: white;
+        }
+
+        .sidebar h4 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #2C3A47;
+            color: #fff;
+        }
+
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            background-color: #fff;
+            min-height: 100vh;
+        }
+
+        .content .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .content .navbar h2 {
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .content .navbar input {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+        }
+
+        .card-wrapper {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .card-custom {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 10px;
+            width: 300px;
+            transition: transform 0.3s;
+        }
+
+        .card-custom:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-custom h5 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .card-custom .number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #4B6584;
+        }
+
+        .card-custom .progress {
+            margin-top: 10px;
+        }
+
+        .content-section {
+            margin-top: 30px;
+        }
+
+        .content-section h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .btn-new-campaign {
+            display: inline-block;
+            background-color: #4B6584;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-new-campaign:hover {
+            background-color: #2C3A47;
+        }
+
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-custom th, .table-custom td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .table-custom th {
+            background-color: #4B6584;
+            color: white;
+        }
+
+        .table-custom tr:hover {
+            background-color: #f0f2f5;
+        }
+
+        .table-custom button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .table-custom .btn-edit {
+            background-color: #2C3A47;
+            color: white;
+        }
+
+        .table-custom .btn-delete {
+            background-color: #E74C3C;
+            color: white;
+        }
+
+        .table-custom .btn-accept {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .table-custom .btn-reject {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .request-buttons {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h4>Welcome, {{ current_user.username }}</h4>
+        <a href="{{ url_for('influencer_dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="{{ url_for('influencers_list') }}"><i class="fas fa-users"></i> Influencers</a>
+        <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <div class="content">
+        <div class="navbar">
+            <h2>Sponsor Dashboard</h2>
+            <input type="text" placeholder="Search...">
+        </div>
+
+        <div class="card-wrapper">
+            <div class="card-custom">
+                <h5>Total Campaigns</h5>
+                <div class="number">{{ total_campaigns }}</div>
+                <div class="progress">
+                    <div class="progress-bar" style="width: 50%; background-color: #4B6584;"></div>
+                </div>
+            </div>
+
+            <div class="card-custom">
+                <h5>Total Requests</h5>
+                <div class="number">{{ total_requests }}</div>
+                <div class="progress">
+                    <div class="progress-bar" style="width: 70%; background-color: #45aaf2;"></div>
+                </div>
+            </div>
+
+            <div class="card-custom">
+                <h5>Accepted Requests</h5>
+                <div class="number">{{ total_accepted_requests }}</div>
+                <div class="progress">
+                    <div class="progress-bar" style="width: 80%; background-color: #2ecc71;"></div>
+                </div>
+            </div>
+
+            <div class="card-custom">
+                <h5>Total Spent Budget</h5>
+                <div class="number">Rs {{ total_spent_budget }}</div>
+                <div class="progress">
+                    <div class="progress-bar" style="width: 60%; background-color: #f1c40f;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h3>Manage Your Campaigns and Requests</h3>
+            <a href="{{ url_for('create_campaign') }}" class="btn-new-campaign"><i class="fas fa-plus"></i> Create New Campaign</a>
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>Campaign Title</th>
+                        <th>Niche</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for campaign in campaigns %}
+                    <tr>
+                        <td>{{ campaign.title }}</td>
+                        <td>{{ campaign.niche }}</td>
+                        <td>{{ campaign.start_date }}</td>
+                        <td>{{ campaign.end_date }}</td>
+                        <td>
+                            <button class="btn-edit" onclick="window.location.href='{{ url_for('edit_campaign', campaign_id=campaign.id) }}'">Edit</button>
+                            <form action="{{ url_for('delete_campaign', campaign_id=campaign.id) }}" method="POST" style="display:inline;">
+                                <button class="btn-delete" type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5">No campaigns available. Please create a new campaign.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-section">
+            <h3>Accepted Requests</h3>
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <!-- <th>Request Title</th> -->
+                        <th>Campaign</th>
+                        <th>Influencer</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in accepted_requests %}
+                    <tr>
+                        <!-- <td>{{ request.title }}</td> -->
+                        <td>{{ request.campaign.title }}</td>
+                        <td>{{ request.influencer.username }}</td>
+                        <td>Rs {{ request.payment_amount }}</td>
+                        <td><span class="text-success">Accepted</span></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5">No accepted requests.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-section">
+            <h3>Rejected Requests</h3>
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <!-- <th>Request Title</th> -->
+                        <th>Campaign</th>
+                        <th>Influencer</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in rejected_requests %}
+                    <tr>
+                        <!-- <td>{{ request.title }}</td> -->
+                        <td>{{ request.campaign.title }}</td>
+                        <td>{{ request.influencer.username }}</td>
+                        <td>Rs {{ request.payment_amount }}</td>
+                        <td><span class="text-danger">Rejected</span></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5">No rejected requests.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-section">
+            <h3>Pending Requests</h3>
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <!-- <th>Request Title</th> -->
+                        <th>Campaign</th>
+                        <th>Influencer</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in pending_requests %}
+                    <tr>
+                        <!-- <td>{{ request.title }}</td> -->
+                        <td>{{ request.campaign.title }}</td>
+                        <td>{{ request.influencer.username }}</td>
+                        <td>Rs {{ request.payment_amount }}</td>
+                        <td><span class="text-info">Pending</span></td>
+                        <td class="request-buttons">
+                            <form action="{{ url_for('accept_request', request_id=request.id) }}" method="POST" style="display:inline;">
+                                <button class="btn-accept" type="submit">Accept</button>
+                            </form>
+                            <form action="{{ url_for('reject_request', request_id=request.id) }}" method="POST" style="display:inline;">
+                                <button class="btn-reject" type="submit">Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6">No pending requests.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</body>
+</html>

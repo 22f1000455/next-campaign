@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+
+<style>
+    /* General Reset and Body Styles */
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Roboto', sans-serif;
+        background-color: #f4f4f4;
+    }
+
+    .content {
+        padding-top: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 60vh;
+        position: relative;
+    }
+
+    /* Login Form Container */
+    .login-container {
+    max-width: 100%;
+    width: 500px; 
+    padding: 30px;
+    background-image: url('https://i.pinimg.com/564x/fc/99/ac/fc99acfd195ec6a9fcffd61d0adacb47.jpg');
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2); 
+    background-size: cover;
+    background-position: center; 
+    position: absolute; /* Position the container absolutely */
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); /* Translate the container to the center of the screen */
+    z-index: 2; /* Ensure the container is above other content */
+}
+
+
+    .login-container h2 {
+        text-align: center;
+        color: #444;
+        margin-bottom: 25px;
+        font-weight: bold;
+    }
+
+    .login-container form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .login-container form input[type="text"],
+    .login-container form input[type="password"] {
+        padding: 12px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .login-container form input[type="submit"] {
+        background: linear-gradient(90deg, #673ab7, #512da8);
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        margin-top: 20px;
+        transition: background 0.3s;
+    }
+
+    .login-container form input[type="submit"]:hover {
+        background: linear-gradient(90deg, #311b92, #673ab7);
+    }
+
+    .login-container form .form-control {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .login-container form .form-control label {
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #555;
+    }
+
+    /* Background Image Styles */
+    .background-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+        filter: brightness(70%);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .login-container {
+            padding: 20px;
+        }
+
+        .login-container form input[type="text"],
+        .login-container form input[type="password"],
+        .login-container form input[type="submit"] {
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .login-container {
+            width: 90%;
+        }
+
+        .login-container h2 {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+
+<div class="content">
+    <div class="login-container">
+        <h2>Login</h2>
+        <form method="POST" action="{{ url_for('login') }}">
+            {{ form.hidden_tag() }}
+            <div class="form-control">
+                {{ form.email.label }}
+                {{ form.email(size=32) }}
+            </div>
+            <div class="form-control">
+                {{ form.password.label }}
+                {{ form.password(size=32) }}
+            </div>
+            {{ form.submit(class_="btn") }}
+        </form>
+   
+
+{% endblock %}

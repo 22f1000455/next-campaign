@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            background-color: #4B6584;
+            padding-top: 20px;
+            color: white;
+        }
+
+        .sidebar h4 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #2C3A47;
+            color: white;
+        }
+
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            background-color: #fff;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .navbar h2 {
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .navbar input {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+        }
+
+        .card-wrapper {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .card-custom {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 10px;
+            width: 300px;
+            transition: transform 0.3s;
+        }
+
+        .card-custom:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-custom h5 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .card-custom .number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #4B6584;
+        }
+
+        .card-custom .progress {
+            margin-top: 10px;
+        }
+
+        .content-section {
+            margin-top: 30px;
+        }
+
+        .content-section h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-custom th,
+        .table-custom td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .table-custom th {
+            background-color: #4B6584;
+            color: white;
+        }
+
+        .table-custom tr:hover {
+            background-color: #f0f2f5;
+        }
+
+        .table-custom button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .table-custom .btn-edit {
+            background-color: #2C3A47;
+            color: white;
+        }
+
+        .table-custom .btn-delete {
+            background-color: #E74C3C;
+            color: white;
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
+
+        .table-container h4 {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h4>Welcome, {{ current_user.username }}</h4>
+        <a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <div class="content">
+        <div class="navbar">
+            <h2>Admin Dashboard</h2>
+            <input type="text" placeholder="Search...">
+        </div>
+
+        <div class="card-wrapper">
+            <div class="card-custom">
+                <h5>Total Sponsors</h5>
+                <div class="number">{{ total_sponsors }}</div>
+                <div class="progress">
+                    <div class="progress-bar" style="width: 50%; background-color: #4B6584;"></div>
+                </div>
+            </div>
+
+            <div class="card-custom">
+                <h5>Total Influencers</h5>
+                <div class="number">{{ total_influencers }}</div>
+                <div class="progress">
+                    <div class="progress-bar" style="width: 70%; background-color: #45aaf2;"></div>
+                </div>
+            </div>
+
+            <div class="card-custom">
+                <h5>Total Ad Requests</h5>
+                <div class="number">{{ total_ad_requests }}</div>
+                <div class="progress">
+                    <div class="progress-bar" style="width: 80%; background-color: #2ecc71;"></div>
+                </div>
+            </div>
+
+            <div class="card-custom">
+                <h5>Total Campaigns</h5>
+                <div class="number">{{ total_campaigns }}</div>
+                <div class="progress">
+                    <div class="progress-bar" style="width: 60%; background-color: #f1c40f;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <div class="table-container">
+                <h4>All Sponsors</h4>
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sponsor in sponsors %}
+                        <tr>
+                            <td>{{ sponsor.username }}</td>
+                            <td>{{ sponsor.email }}</td>
+                            <
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2">No sponsors found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-container">
+                <h4>All Influencers</h4>
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Niche</th>
+                            <th>Reach</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for influencer in influencers %}
+
+                        <tr>
+                            <td>{{ influencer.username }}</td>
+                            <td>{{ influencer.influencer_profile.niche }}</td>
+                            <td>{{ influencer.influencer_profile.reach }}</td>
+                            <td>{{ influencer.email }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2">No influencers found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-container">
+                <h4>All Ad Requests</h4>
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th>Campaign Title</th>
+                            <th>Influencer</th>
+                            <th>Requirements</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ad_request in ad_requests %}
+                        <tr>
+                            <td>{{ ad_request.campaign.title }}</td>
+                            <td>{{ ad_request.influencer.username }}</td>
+                            <td>{{ ad_request.requirements }}</td>
+                            <td>{{ ad_request.status }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4">No ad requests found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-container">
+                <h4>All Campaigns</h4>
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Sponsor</th>
+                            <th>Budget</th>
+                            <th>Niche</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for campaign in campaigns %}
+                        <tr>
+                            <td>{{ campaign.title }}</td>
+                            <td>{{ campaign.sponsor.username }}</td>
+                            <td>Rs {{ campaign.budget }}</td>
+                            <td>{{ campaign.niche }}</td>
+                            <td>{{ campaign.start_date }}</td>
+                            <td>{{ campaign.end_date }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6">No campaigns found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

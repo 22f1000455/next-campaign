@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Campaign</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+        }
+
+        .sidenav {
+            width: 240px;
+            height: 100%;
+            position: fixed;
+            background-color: #2c3e50;
+            padding-top: 20px;
+            color: white;
+        }
+
+        .sidenav h4 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidenav a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .sidenav a:hover {
+            background-color: #34495e;
+            color: white;
+        }
+
+        .main-content {
+            margin-left: 240px;
+            padding: 40px;
+            background-color: #f4f7f6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .btn-primary {
+            background-color: #1abc9c;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #16a085;
+        }
+
+        .form-control {
+            border-radius: 5px;
+            border: 1px solid #dcdde1;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .form-group textarea {
+            resize: none;
+        }
+
+        @media (max-width: 768px) {
+            .sidenav {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidenav">
+        <h4>Hello {{ current_user.username }}</h4>
+        <a href="{{ url_for('sponsor_dashboard') }}"><span class="material-icons-round">dashboard</span> Dashboard</a>
+        <a href="{{ url_for('logout') }}"><span class="material-icons-round">logout</span> Logout</a>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <h2>Create New Campaign</h2>
+            <form action="{{ url_for('create_campaign') }}" method="POST">
+                <div class="form-group">
+                    <label for="title">Campaign Title</label>
+                    <input type="text" class="form-control" id="title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="niche">Niche</label>
+                    <input type="text" class="form-control" id="niche" name="niche" required>
+                </div>
+                <div class="form-group">
+                    <label for="start_date">Start Date</label>
+                    <input type="date" class="form-control" id="start_date" name="start_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="end_date">End Date</label>
+                    <input type="date" class="form-control" id="end_date" name="end_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="budget">Budget</label>
+                    <input type="number" class="form-control" id="budget" name="budget" required>
+                </div>
+                <div class="form-group">
+                    <label for="goals">Goals</label>
+                    <textarea class="form-control" id="goals" name="goals" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="visibility">Visibility</label>
+                    <select class="form-control" id="visibility" name="visibility" required>
+                        <option value="public">Public</option>
+                        <option value="private">Private</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Create Campaign</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
