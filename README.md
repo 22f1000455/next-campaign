@@ -1,4 +1,7 @@
-# How to execute the App
+# Next Campaign 
+It is a web-based application that connects sponsors with influencers for streamlined marketing campaigns. Sponsors can create and manage campaigns, send sponsorship requests, and track collaborations, while influencers manage profiles, respond to requests, and monitor earnings. The platform oers robust functionalities for both sponsors and influencers, ensuring ecient management of influencer marketing campaigns.
+
+## How to execute the App
 Open the app folder in terminal and write the following commands:
 
 Command 1:
